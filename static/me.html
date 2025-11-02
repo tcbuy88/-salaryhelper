@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>我的 - SalaryHelper DEMO</title><link rel="stylesheet" href="styles.css"/></head>
+<body>
+  <h2>用户中心</h2>
+  <div id="user"></div>
+  <button id="logout">登出</button>
+  <script src="api-client.js"></script>
+  <script>
+    async function render(){ const u = await ApiClient.getCurrentUser(); document.getElementById('user').innerText = JSON.stringify(u,null,2); }
+    document.getElementById('logout').addEventListener('click', ()=> { ApiClient.logout(); location.href='/static/index.html'; });
+    render();
+  </script>
+</body></html>

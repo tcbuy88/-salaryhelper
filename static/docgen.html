@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>文书生成 - SalaryHelper DEMO</title><link rel="stylesheet" href="styles.css"/></head>
+<body>
+  <h2>文书生成（模板填充并下载）</h2>
+  <select id="tpl"></select>
+  <div id="form"></div>
+  <button id="gen">生成并下载</button>
+  <div id="preview"></div>
+  <script src="api-client.js"></script>
+  <script>
+    async function loadTemplates(){
+      const tpls = await ApiClient.listTemplates();
+      const s=document.getElementById('tpl');
+      s.innerHTML='';
+      tpls.forEach(t=>{ const o=document.createElement('option'); o.value=t.id; o.textContent=t.name; s.appendChild(o); });
+      s.addEventListener('change', ()=> renderForm(s.value));
+      if(tpls[0]) { s.value=tpls[0].id; renderForm(tpls[0].id); }
+    }
+    function renderForm(id){
+      ApiClient.getTemplate(id).then(t=>{
+        const f=document.getElementById('form'); f.innerHTML='';
+        (t.fields || []).forEach(field=>{
+          const label=document.createElement('label'); label.textContent=field.title || field.name;
+          const input=document.createElement('input'); input.id='f_'+field.name;
+          f.appendChild(label); f.appendChild(input); f.appendChild(document.createElement('br'));
+        });
+      });
+    }
+    document.getElementById('gen').addEventListener('click', async ()=>{
+      const tId = document.getElementById('tpl').value;
+      const t = await ApiClient.getTemplate(tId);
+      const values = {};
+      (t.fields || []).forEach(f=> values[f.name] = document.getElementById('f_'+f.name).value || '');
+      const res = await ApiClient.renderTemplate(tId, values);
+      document.getElementById('preview').innerHTML = res.rendered_html || res.rendered_text;
+      // download as html
+      const blob = new Blob([res.rendered_html || res.rendered_text || ''], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='document.html'; a.click();
+    });
+    loadTemplates();
+  </script>
+</body></html>

@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: SalaryHelper Demo API
+  version: "1.0.0"
+servers:
+  - url: /api/v1
+paths:
+  /auth/login:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+  /conversations:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+  /conversations/{convId}/messages:
+    post:
+      parameters:
+        - in: path
+          name: convId
+          required: true
+          schema: { type: string }
+  /upload:
+    post:
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object

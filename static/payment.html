@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>支付 - SalaryHelper DEMO</title><link rel="stylesheet" href="styles.css"/></head>
+<body>
+  <h2>支付 / 充值（本地模拟）</h2>
+  <button id="buy">创建充值订单 1 元</button>
+  <div id="status"></div>
+  <script src="api-client.js"></script>
+  <script>
+    document.getElementById('buy').addEventListener('click', async ()=>{
+      const order = await ApiClient.createOrder({ sku: 'demo_1', amount_cents: 100 });
+      // open mock payment dialog
+      const ok = confirm('模拟支付：是否支付 1.00 元？');
+      if(ok){
+        await ApiClient._mockPaymentCallback(order.id, true);
+        document.getElementById('status').textContent='支付成功';
+      } else {
+        await ApiClient._mockPaymentCallback(order.id, false);
+        document.getElementById('status').textContent='支付取消';
+      }
+    });
+  </script>
+</body></html>

@@ -1,0 +1,5 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Dashboard</title><link rel="stylesheet" href="../styles.css"/></head>
+<body><h2>仪表盘（Demo）</h2><div id="metrics"></div><script src="../api-client.js"></script><script>
+  async function load(){ const m=await ApiClient.getAdminMetrics(); document.getElementById('metrics').innerHTML=JSON.stringify(m,null,2); }
+  load();
+</script></body></html>

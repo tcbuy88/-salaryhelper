@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>证据库 - SalaryHelper DEMO</title><link rel="stylesheet" href="styles.css"/></head>
+<body>
+  <h2>证据库（上传 & 预览）</h2>
+  <input id="f" type="file" multiple />
+  <button id="up">上传</button>
+  <div id="list"></div>
+  <script src="api-client.js"></script>
+  <script>
+    document.getElementById('up').addEventListener('click', async ()=>{
+      const input=document.getElementById('f');
+      for(const file of input.files){
+        await ApiClient.uploadFile(file);
+      }
+      render();
+    });
+    async function render(){
+      const arr = await ApiClient.listAttachments();
+      const el=document.getElementById('list'); el.innerHTML='';
+      arr.forEach(a=>{
+        const d=document.createElement('div'); d.innerHTML='<strong>'+a.file_name+'</strong> ('+Math.round(a.size_bytes/1024)+' KB)';
+        if(a.content_type && a.content_type.startsWith('image/')) {
+          const img=document.createElement('img'); img.src=a.preview_url; img.style.maxWidth='200px'; d.appendChild(img);
+        }
+        el.appendChild(d);
+      });
+    }
+    render();
+  </script>
+</body></html>

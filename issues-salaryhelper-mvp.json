@@ -1,0 +1,4 @@
+[
+  {"title":"实现 Auth - 手机号验证码登录","description":"实现前端登录与后端 /auth/login","estimate_days":2,"priority":"high","labels":["auth"]},
+  {"title":"实现 Chat 基础","description":"实现会话、消息、MessageInput、MessageList","estimate_days":5,"priority":"high","labels":["chat"]}
+]

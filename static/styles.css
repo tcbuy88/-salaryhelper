@@ -1,0 +1,5 @@
+body{font-family:Arial,Helvetica,sans-serif;padding:16px;background:#f6f8fb;color:#1f2d3d}
+h1,h2{color:#1866FF}
+button{background:#1866FF;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer}
+input,textarea,select{padding:6px;border:1px solid #d1d5db;border-radius:4px}
+img{max-width:100%}

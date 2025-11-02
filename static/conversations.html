@@ -1,0 +1,49 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>会话 - SalaryHelper DEMO</title><link rel="stylesheet" href="styles.css"/></head>
+<body>
+  <h2>会话 / 聊天（本地 Mock）</h2>
+  <div id="convs"></div>
+  <div id="chat"></div>
+  <textarea id="input" rows="3" cols="60"></textarea><br/>
+  <button id="send">发送</button>
+  <script src="api-client.js"></script>
+  <script>
+    async function renderConvs(){
+      const convs = await ApiClient.listConversations();
+      const el = document.getElementById('convs');
+      el.innerHTML = '<h3>会话列表</h3>';
+      convs.forEach(c=> {
+        const btn = document.createElement('button');
+        btn.textContent = c.title || c.id;
+        btn.addEventListener('click', ()=> loadConv(c.id));
+        el.appendChild(btn);
+      });
+      const newBtn = document.createElement('button');
+      newBtn.textContent='新建会话';
+      newBtn.addEventListener('click', async ()=>{
+        const conv = await ApiClient.createConversation({ title: '会话 '+Date.now() });
+        renderConvs();
+        loadConv(conv.id);
+      });
+      el.appendChild(newBtn);
+    }
+    async function loadConv(id){
+      window._convId = id;
+      const data = await ApiClient.getConversation(id);
+      const chat = document.getElementById('chat');
+      chat.innerHTML = '<h3>会话: '+id+'</h3>';
+      (data.messages||[]).forEach(m=>{
+        const p=document.createElement('div');
+        p.textContent = m.sender+': '+(m.content||m.text);
+        chat.appendChild(p);
+      });
+    }
+    document.getElementById('send').addEventListener('click', async ()=>{
+      const text = document.getElementById('input').value;
+      if(!window._convId){ alert('请选择或创建会话'); return; }
+      await ApiClient.sendMessage(window._convId, { text });
+      document.getElementById('input').value='';
+      setTimeout(()=> loadConv(window._convId), 900);
+    });
+    renderConvs();
+  </script>
+</body></html>

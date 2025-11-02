@@ -1,0 +1,20 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>知识库 - SalaryHelper DEMO</title><link rel="stylesheet" href="styles.css"/></head>
+<body>
+  <h2>知识库（本地检索示例）</h2>
+  <input id="q" placeholder="搜索关键字"/><button id="s">搜索</button>
+  <div id="list"></div>
+  <script src="api-client.js"></script>
+  <script>
+    async function search(q){ const items = await ApiClient.listKb(); const el=document.getElementById('list'); el.innerHTML=''; items.filter(i=>!q||i.title.includes(q)||i.content.includes(q)).forEach(it=>{
+      const d=document.createElement('div'); d.innerHTML='<h4>'+it.title+'</h4><p>'+it.content.slice(0,200)+'</p>';
+      const btn=document.createElement('button'); btn.textContent='引用到会话'; btn.addEventListener('click', ()=> {
+        if(window._convId) ApiClient.sendMessage(window._convId, { text: '[引用] '+it.title + '\\n' + it.content.slice(0,200) });
+        alert('已引用（若有打开的会话）');
+      });
+      d.appendChild(btn);
+      el.appendChild(d);
+    }) }
+    document.getElementById('s').addEventListener('click', ()=> search(document.getElementById('q').value));
+    search('');
+  </script>
+</body></html>
